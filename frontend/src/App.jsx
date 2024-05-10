@@ -8,7 +8,7 @@ function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const [totalChunks, setTotalChunks] = useState(0);
   const [progress, setProgress] = useState(0);
-  const chunkSize = 10 * 1024 * 1024; // 10MB
+  const chunkSize = 10 * 1024; // 50KB
 
   // Upload file in One Shot
   const sendOneShot = async () => {
@@ -82,6 +82,7 @@ function App() {
     // Set the progress percentage
     setProgress(Math.round((currentChunk * 100) / totalChunks));
 
+    console.log(`CurrentChunk: ${currentChunk}`)
     // Make post request
     return axios.post("http://localhost:8080/upload/parallel", formData);
   };
@@ -107,7 +108,7 @@ function App() {
     } catch (error) {
       if (error.response.status === 404) {
         try {
-          axios.post("http://localhost:8080/upload/parallel/first", {
+          await axios.post("http://localhost:8080/upload/parallel/first", {
             fileName: selectedFile.name,
             totalChunks,
             totalSize: selectedFile.size,
